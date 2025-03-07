@@ -1,0 +1,1720 @@
+(() => {
+    var ye = Object.defineProperty;
+    var be = (d, e, t) => e in d ? ye(d, e, {
+        enumerable: !0,
+        configurable: !0,
+        writable: !0,
+        value: t
+    }) : d[e] = t;
+    var k = (d, e, t) => be(d, typeof e != "symbol" ? e + "" : e, t);
+    var X = {
+        Wolf: 67,
+        Spider: 68,
+        Rabbit: 92,
+        Boar: 77,
+        Hawk: 81,
+        GoldenChicken: 90,
+        Crab: 74,
+        KingCrab: 78,
+        Piranha: 72,
+        Kraken: 73,
+        ArcticFox: 69,
+        PolarBear: 70,
+        Dragon: 71,
+        Mammoth: 85,
+        Penguin: 100,
+        BabyDragon: 79,
+        BabyMammoth: 84,
+        LavaDrag: 76,
+        BabyLavaDrag: 80,
+        LavaMonster: 75,
+        Sandworm: 83,
+        Vulture: 82,
+        GoldenHen: 89,
+        Chicken: 90
+    };
+    var h = {
+        Visuals: {
+            DrawItemsOnChest: {
+                enabled: !0
+            },
+            ShowLockedChest: {
+                enabled: !0
+            },
+            JoinNLeaves: {
+                enabled: !0
+            },
+            ShowHoodNames: {
+                enabled: !0
+            },
+            Timers: {
+                enabled: !0
+            },
+            Xray: {
+                key: "KeyZ",
+                enabled: !1,
+                opacity: .4
+            },
+            VehicleXray: {
+                enabled: !0,
+                opacity: .4
+            },
+            RoofXray: {
+                enabled: !0,
+                opacity: .4
+            },
+            BoxInfo: {
+                enabled: !0
+            },
+            Debugger: {
+                enabled: !1
+            },
+            ListEnabledHacks: {
+                enabled: !0
+            },
+            Fps: {
+                enabled: !0
+            },
+            Ping: {
+                enabled: !0
+            },
+            Speed: {
+                enabled: !0
+            },
+            ColoredSpikes: {
+                enabled: !0
+            },
+            Tracers: {
+                Players: {
+                    enabled: !0
+                },
+                Wolf: {
+                    enabled: !1
+                },
+                Spider: {
+                    enabled: !1
+                },
+                Rabbit: {
+                    enabled: !1
+                },
+                Boar: {
+                    enabled: !1
+                },
+                Hawk: {
+                    enabled: !1
+                },
+                GoldenChicken: {
+                    enabled: !1
+                },
+                Crab: {
+                    enabled: !1
+                },
+                KingCrab: {
+                    enabled: !1
+                },
+                Piranha: {
+                    enabled: !1
+                },
+                Kraken: {
+                    enabled: !1
+                },
+                ArcticFox: {
+                    enabled: !1
+                },
+                PolarBear: {
+                    enabled: !1
+                },
+                Dragon: {
+                    enabled: !1
+                },
+                Mammoth: {
+                    enabled: !1
+                },
+                Penguin: {
+                    enabled: !1
+                },
+                BabyDragon: {
+                    enabled: !1
+                },
+                BabyMammoth: {
+                    enabled: !1
+                },
+                LavaDrag: {
+                    enabled: !1
+                },
+                BabyLavaDrag: {
+                    enabled: !1
+                },
+                LavaMonster: {
+                    enabled: !1
+                },
+                Sandworm: {
+                    enabled: !1
+                },
+                Vulture: {
+                    enabled: !1
+                },
+                GoldenHen: {
+                    enabled: !1
+                },
+                Chicken: {
+                    enabled: !1
+                }
+            },
+            OnTop: {
+                Players: {
+                    enabled: !0
+                },
+                Crate: {
+                    enabled: !0
+                },
+                Chest: {
+                    enabled: !0
+                }
+            }
+        },
+        Misc: {
+            AutoBook: {
+                enabled: !0
+            },
+            AutoCraft: {
+                enabled: !1,
+                key: "KeyK"
+            },
+            AutoFire: {
+                enabled: !1,
+                key: "KeyX"
+            },
+            AutoPilot: {
+                enabled: !0
+            },
+            AutoWall: {
+                enabled: !1,
+                key: "Space"
+            },
+            AutoSpike: {
+                enabled: !1,
+                key: "KeyC"
+            }
+        },
+        Aimbot: {
+            enabled: !1,
+            key: "KeyF"
+            customDist: {
+                enabled: !1,
+                dist: 0
+            },
+            Animal_Aimbot: {
+                enabled: !1,
+                key: "KeyZ"
+                type: []
+            }
+        },
+        Spectator: {
+            enabled: !1,
+            key: "KeyP",
+            speed: 50
+        }
+    };
+    var $ = {
+        DEVELOPMENT: !0
+    };
+    var we = ["SelfType", "SubPropType", "Length", "HasProperty", "StringHas", "HookString", "!StringHas", "IsNot"],
+        f = class f {
+            constructor(e) {
+                f.main = e, f.master = Symbol(), this.storage = new W(this)
+            }
+            MainHook(e) {
+                Object.defineProperty(e.object, e.prop, {
+                    get: function() {
+                        return this[f.master]
+                    },
+                    set: function(t) {
+                        var s;
+                        this[f.master] = (s = e.set_custom_value) != null ? s : t, !f.main.hookedObjects[e.name] && !(e.exclude && e.exclude.some(a => Object.keys(this).includes(a))) && (f.main.hookedObjects[e.name] = this, $.DEVELOPMENT && (window[e.name] = this)), f.checkQueue()
+                    }
+                })
+            }
+            SubHook(e, t) {
+                return new Promise(s => {
+                    (() => {
+                        s(t.reduce((o, i) => {
+                            let n = i[0];
+                            if (!we.includes(n)) return o;
+                            switch (n) {
+                                case "SelfType":
+                                    return f.getFromType(o.length ? o : e, i[1]);
+                                case "HasProperty":
+                                    return f.hasProp(e, i);
+                                case "SubPropType":
+                                    return o.length ? f.SubPropType(e, o, i[1], i[2]) : [];
+                                case "Length":
+                                    return ["ExactValue", "BiggerThan", "SmallerThan"].forEach((u, m) => {
+                                        i[m + 1] && (o = f.checkLength(e, o.length ? o : e, i[m + 1], u))
+                                    }), o;
+                                case "StringHas":
+                                case "!StringHas":
+                                    return o.length ? f.StringHas(e, o, i, n === "!StringHas") : [];
+                                case "IsNot":
+                                    return o.length ? f.IsNot(o, i) : [];
+                                default:
+                                    return o
+                            }
+                        }, []))
+                    })()
+                })
+            }
+            AddToQueue(e) {
+                f._queue.push(e)
+            }
+            AddToSubQueue(e, t) {
+                f._subqueue.push({
+                    objName: e,
+                    propName: t
+                })
+            }
+            checkSubQueue(e, t) {
+                return f._subqueue.some(s => s.objName === e && s.propName === t)
+            }
+            deleteSubQueue(e, t) {
+                let s = f._subqueue.findIndex(a => a.objName === e && a.propName === t);
+                s != -1 && f._subqueue.splice(s, 1)
+            }
+            defineProp(e, t, s, a) {
+                Object.defineProperty(e, t, {
+                    get: function() {
+                        return e[s]
+                    },
+                    set: function(o) {
+                        a && a(o, t, s), e[s] = o
+                    }
+                })
+            }
+            bindTo(e, t) {
+                let s = e;
+                return function(...a) {
+                    s.apply(this, a), t.apply(this, a)
+                }
+            }
+            HookPushMethod(e, t, s) {
+                let a = e[t] || [];
+                e.__callbackList || (e.__callbackList = {}), e.__callbackList[t] || (e.__callbackList[t] = []), e.__callbackList[t].includes(s) || e.__callbackList[t].push(s);
+                let o = (i, n) => {
+                    i._hooked || (Object.defineProperty(i, "push", {
+                        value: (...u) => {
+                            n.forEach(m => m(u, i)), Array.prototype.push.apply(i, u)
+                        }
+                    }), i._hooked = !0)
+                };
+                e.hasOwnProperty("__hooked_".concat(t)) || (Object.defineProperty(e, t, {
+                    get() {
+                        return a
+                    },
+                    set(i) {
+                        a = i, o(a, e.__callbackList[t])
+                    }
+                }), e["__hooked_".concat(t)] = !0), Array.isArray(a) && o(a, e.__callbackList[t])
+            }
+            preventDetection(e) {
+                Object.prototype.hasOwnProperty = new Proxy(Object.prototype.hasOwnProperty, {
+                    apply: function(t, s, a) {
+                        return Object.values(e).map(o => o.prop).includes(a[0]) ? !1 : t.apply(s, a)
+                    }
+                })
+            }
+            async addProp(e, t, s, a, o = 0) {
+                if (!this.checkSubQueue(e, t) && (this.AddToSubQueue(e, t), !e[t])) {
+                    let i = Object.keys(e)[s],
+                        n = [];
+                    a && (n = await this.SubHook(e, a)), i = n[o] || i, this.defineProp(e, t, i), this.deleteSubQueue(e, t)
+                }
+            }
+            static IsNot(e, t) {
+                return e.filter(s => !t.includes(s))
+            }
+            static StringHas(e, t, s, a = !1) {
+                return t.filter(o => s.slice(1).every(i => !e[o].toString().includes(i) === a))
+            }
+            static hasProp(e, t) {
+                return Object.keys(e).filter(s => typeof e[s] == "object" && t.slice(1).every(a => {
+                    var o;
+                    return ((o = e[s]) == null ? void 0 : o[a]) !== void 0
+                }))
+            }
+            static checkLength(e, t, s, a) {
+                return t.filter(o => {
+                    let i = Array.isArray(e[o]) ? e[o].length : Object.keys(e[o]).length;
+                    return a === "ExactValue" ? i === s : a === "BiggerThan" ? i > s : a === "SmallerThan" ? i < s : !1
+                })
+            }
+            static SubPropType(e, t, s, a) {
+                return Object.keys(e).filter(o => t.includes(o) && typeof e[o] == "object" && e[o] !== null && (Array.isArray(e[o]) ? a === "All" ? e[o].length > 0 && e[o].every(i => s === "Array" ? Array.isArray(i) : typeof i == "object" && i !== null && !Array.isArray(i)) : e[o].filter(i => s === "Array" ? Array.isArray(i) : typeof i == "object" && i !== null && !Array.isArray(i)).length >= a : a === "All" ? Object.keys(e[o]).length > 0 && Object.values(e[o]).every(i => s === "Array" ? Array.isArray(i) : typeof i == "object" && i !== null && !Array.isArray(i)) : Object.values(e[o]).filter(i => s === "Array" ? Array.isArray(i) : typeof i == "object" && i !== null && !Array.isArray(i)).length >= a))
+            }
+            static getFromType(e, t) {
+                return Object.keys(e).filter(s => t === "Array" && Array.isArray(e[s]) || t === "Function" && typeof e[s] == "function" || t === "Object" && typeof e[s] == "object" && !Array.isArray(e[s]) || t === "string" && typeof e[s] == "string" || t === "number" && typeof e[s] == "number" || t === "boolean" && typeof e[s] == "boolean")
+            }
+            static checkQueue() {
+                if (f._queue.length && (f._queue.forEach((e, t) => {
+                        f.main.hookedObjects[e] && f._queue.splice(t, 1)
+                    }), f._queue.length == 0)) return f.main.InitiliazeProperties()
+            }
+        };
+    k(f, "_queue", []), k(f, "_subqueue", []), k(f, "master"), k(f, "main"), k(f, "callback");
+    var q = f,
+        W = class {
+            constructor(e) {
+                this.stored = {}
+            }
+            store(e, t) {
+                this.stored[e] = t
+            }
+            retrieve(e) {
+                return this.stored[e]
+            }
+        },
+        J = q;
+    var Q = {
+        UI: {
+            object: Object.prototype,
+            exclude: ["adsFlush"],
+            prop: "options",
+            name: "UI"
+        },
+        client: {
+            object: Object.prototype,
+            prop: "timeout",
+            name: "client"
+        },
+        user: {
+            object: Object.prototype,
+            prop: "control",
+            name: "user"
+        },
+        world: {
+            object: Object.prototype,
+            prop: "mode",
+            exclude: ["alert", "cache"],
+            name: "world"
+        },
+        mouse: {
+            object: Object.prototype,
+            prop: "IDLE",
+            name: "mouse"
+        },
+        keyboard: {
+            object: Object.prototype,
+            prop: "down",
+            name: "keyboard"
+        }
+    };
+    var K = {
+        DOMContentLoaded: [],
+        requestAnimationFrame: [],
+        MainRun: [],
+        mousemove: [],
+        keydown: [],
+        keyup: []
+    };
+    var Ce = CanvasRenderingContext2D.prototype.clearRect,
+        Fe = CanvasRenderingContext2D.prototype.fillRect,
+        _e = 5e3,
+        xe = EventTarget.prototype.addEventListener,
+        Y, c = {
+            readyState: !1
+        },
+        ee = !1;
+
+    function te() {
+        requestAnimationFrame(te), z("MainRun"), ee = !0
+    }
+
+    function Z(d) {
+        d || (Y = setTimeout(() => c.close(), _e)), d && clearTimeout(Y) && (c.waiting = !1)
+    }
+
+    function ie(d, e) {
+        K[d].push(e)
+    }
+
+    function z(d, ...e) {
+        for (let t of K[d]) t(...e)
+    }
+
+    function G() {
+        user.cam.w = window.innerWidth, user.cam.h = window.innerHeight
+    }
+    window.WebSocket = new Proxy(window.WebSocket, {
+        construct: function(d, e) {
+            return !e || e.length == 0 ? {} : (c = new d(...e), c._send = c.send.bind(c), c.waiting = !0, c.send = function() {
+                if (typeof arguments[0] == "string" && JSON.parse(arguments[0]).length > 18) {
+                    let t = JSON.parse(arguments[0]);
+                    t[1] += 3e3, t[2] += 3e3, arguments[0] = JSON.stringify(t)
+                }
+                c._send(...arguments)
+            }, c.addEventListener("open", () => {
+                Z(!0)
+            }), c.addEventListener("message", t => {
+                if (typeof t.data == "string") {
+                    let s = JSON.parse(t.data);
+                    switch (s[0]) {
+                        case 3:
+                            _.hookedObjects.world.multi_py = s[7], _.hookedObjects.world.h = s[21] * 100, _.hookedObjects.user.alive = !0;
+                            break
+                    }
+                }
+            }), c.addEventListener("error", t => {}), c.addEventListener("close", t => {
+                _.hookedObjects.user.alive = !1
+            }), Z(!1), !ee && te(), c)
+        }
+    });
+    EventTarget.prototype.addEventListener = function(d, e, t) {
+        if (d === "mousemove") {
+            let s = e;
+            e = function() {
+                if (K.mousemove.every(a => a == !1)) return s.apply(this, arguments)
+            }
+        }
+        xe.call(this, d, e, t)
+    };
+    document.addEventListener("keydown", d => {
+        z("keydown", d)
+    });
+    document.addEventListener("keyup", d => {
+        z("keyup", d)
+    });
+    window.addEventListener("resize", G);
+    var p = ENTITES = {
+        players: 0,
+        fire: 1,
+        seed: 3,
+        big_fire: 6,
+        chest: 11,
+        crate: 98,
+        dead_box: 94,
+        wood_spike: 5,
+        stone_spike: 12,
+        gold_spike: 13,
+        diamond_spike: 14,
+        amethyst_spike: 20,
+        reidite_spike: 61,
+        wood_door: 10,
+        stone_door: 15,
+        gold_door: 16,
+        diamond_door: 17,
+        amethyst_door: 21,
+        reidite_door: 60,
+        wood_door_spike: 54,
+        stone_spike_door: 55,
+        gold_spike_door: 56,
+        diamond_spike_door: 57,
+        amethyst_spike_door: 58,
+        reidite_spike_door: 62
+    };
+    var g = {
+        locked_chest_sprite: 241,
+        unlocked_chest_sprite: 269,
+        send_attack: 19,
+        stop_attack: 38,
+        restore_cam: 29,
+        send_build: 17,
+        wood_wall: 264,
+        stone_wall: 265,
+        gold_wall: 266,
+        diamond_wall: 267,
+        amethyst_wall: 213,
+        reidite_wall: 327,
+        wood_spike: 262,
+        stone_spike: 270,
+        gold_spike: 271,
+        diamond_spike: 272,
+        amethyst_spike: 214,
+        reidite_spike: 329
+    };
+    var w = class w {
+        constructor(e) {
+            this.visuals = e, this.main = this.visuals.main, this.hooker = this.main.hooker, this.world = this.main.hookedObjects.world, this.settings = this.main.Configuration.Settings, this.chest_locked_sprite = g.locked_chest_sprite, this.chest_unlocked_sprite = g.unlocked_chest_sprite, this.modified_chest_locked_sprite = this.CreateChest(!0), this.modified_chest_unlocked_sprite = this.CreateChest(!1), this.context = this.visuals.Debugger.context, this.ctx = document.getElementById("game_canvas").getContext("2d"), this.user = this.main.hookedObjects.user, window.sprite[-this.chest_locked_sprite] = [...window.sprite[this.chest_locked_sprite]], window.sprite[this.chest_locked_sprite][2] = this.modified_chest_locked_sprite, window.sprite[-this.chest_unlocked_sprite] = [...window.sprite[this.chest_unlocked_sprite]], window.sprite[this.chest_unlocked_sprite][2] = this.modified_chest_unlocked_sprite, w.settings = this.settings, w.chest_locked_sprite = this.chest_locked_sprite, w.chest_unlocked_sprite = this.chest_unlocked_sprite
+        }
+        init() {
+            this.hooker.HookPushMethod(this.world.units, p.chest, this.set_units.bind(this)), w.DrawLockedChest()
+        }
+        async set_units(e) {
+            let t = e[0],
+                s = () => this.draw_chest_inventory.call(t, this);
+            await this.hooker.addProp(t, "draw", -1, [
+                ["SelfType", "Function"],
+                ["StringHas", "this.angle"]
+            ]), t.draw && (t.old_draw = t.old_draw || t.draw, t.draw = this.hooker.bindTo(t.draw, s))
+        }
+        remove_background(e) {
+            for (let t of this.main.hookedObjects.UI.chest_buttons) {
+                if (!t) return;
+                let s = t.info.img[0],
+                    a = document.createElement("canvas"),
+                    o = a.getContext("2d");
+                a.width = s.width, a.height = s.height, o.drawImage(s, 0, 0);
+                let i = o.getImageData(0, 0, a.width, a.height),
+                    n = i.data;
+                for (let m = 0; m < n.length; m += 4) Math.abs(n[m] - e.r) < 10 && Math.abs(n[m + 1] - e.g) < 10 && Math.abs(n[m + 2] - e.b) < 10 && Math.abs(n[m + 3] / 255 - e.a) < .1 && (n[m + 3] = 0);
+                o.putImageData(i, 0, 0);
+                let u = new Image;
+                u.src = a.toDataURL(), t.info.img[4] = u
+            }
+        }
+        async draw_chest_inventory(e) {
+            var a;
+            try {
+                if (!this.action || !e.settings.Visuals.DrawItemsOnChest.enabled || (this.item = (a = e.main.hookedObjects.UI.chest_buttons[this.action / 2 - 1]) == null ? void 0 : a.info, !this.item)) return;
+                this.item_image = this.item.img[0], this.item_image.src == "" && (this.item_image.src = Object.values(this.item_image).find(o => typeof o == "string" && o.includes("img")));
+                var t = Math.floor(this.x + e.user.cam.x - 34),
+                    s = Math.floor(this.y + e.user.cam.y - 25);
+                e.ctx.save(), e.ctx.translate(t + 30, s + 25), e.ctx.rotate(((this.angle + 90) % 360 - 90) * Math.PI / 180), e.visuals.ctxDrawImage(e.ctx, this.item_image, -25, -25, 50, 50), e.ctx.restore(), e.ctx.save(), e.ctx.translate(t + 30, s + 25), e.ctx.globalAlpha = 1, e.ctx.font = "16px Baloo Paaji", e.ctx.strokeStyle = "rgb(0,0,0)", e.ctx.lineWidth = 7, e.ctx.strokeText("x" + this.info, -30, 20), e.ctx.fillStyle = "rgb(255,255,255)", e.ctx.fillText("x" + this.info, -30, 20), e.ctx.restore()
+            } catch (o) {}
+        }
+        CreateChest(e) {
+            function t(i, n, u) {
+                var m = document.createElement("canvas"),
+                    r = m.getContext("2d");
+                return m.width = 165 * i, m.height = 123 * i, r.save(), r.translate(81 * i, 65 * i), a(r, -78 * i, -54.5 * i, 156 * i, 109 * i, 20 * i), r.restore(), o(r, u[0]), r.save(), r.translate(81 * i, 58 * i), a(r, -78 * i, -54.5 * i, 156 * i, 109 * i, 20 * i), r.restore(), o(r, u[1], u[2], 4), r.save(), r.translate(81 * i, 58 * i), a(r, -69 * i, -47 * i, 138 * i, 93 * i, 15 * i), r.restore(), o(r, u[3], u[4], 4), r.save(), r.translate(79 * i, 54 * i), a(r, -34 * i, -40 * i, 68 * i, 88 * i, 13 * i), r.restore(), o(r, void 0, u[5], 4), r.beginPath(), r.lineCap = "round", r.lineJoin = "round", r.moveTo(44 * i, 13 * i), r.bezierCurveTo(43.5 * i, 55 * i, 43.5 * i, 55 * i, 43 * i, 101 * i), r.closePath(), o(r, void 0, u[6], 4), r.beginPath(), r.lineCap = "round", r.lineJoin = "round", r.moveTo(115 * i, 13 * i), r.bezierCurveTo(115 * i, 56 * i, 115 * i, 56 * i, 115 * i, 101 * i), r.closePath(), o(r, void 0, u[6], 4), r.beginPath(), r.lineCap = "round", r.lineJoin = "round", r.moveTo(35 * i, 6 * i), r.bezierCurveTo(35 * i, 56 * i, 36 * i, 109 * i, 35 * i, 110 * i), r.closePath(), o(r, void 0, u[7], 4), r.beginPath(), r.lineCap = "round", r.lineJoin = "round", r.moveTo(123 * i, 6 * i), r.bezierCurveTo(123 * i, 56 * i, 123 * i, 56 * i, 123 * i, 110 * i), r.closePath(), o(r, void 0, u[7], 4), r.save(), r.translate(79 * i, 113 * i), a(r, -18 * i, -2 * i, 36 * i, 4 * i, 20 * i), r.restore(), o(r, void 0, u[8], 4), r.save(), r.translate(75 * i, 118 * i), a(r, -6 * i, -2.5 * i, 20 * i, 5 * i, 20 * i), r.restore(), o(r, u[8]), m
+            }
+
+            function s(i) {
+                var n = new Image;
+                return n.src = i.toDataURL("image/png"), n.width = i.width, n.height = i.height, n.isLoaded = 1, n
+            }
+
+            function a(i, n, u, m, r, y) {
+                m < 2 * y && (y = m / 2), r < 2 * y && (y = r / 2), 0 > y && (y = 0), i.beginPath(), i.moveTo(n + y, u), i.arcTo(n + m, u, n + m, u + r, y), i.arcTo(n + m, u + r, n, u + r, y), i.arcTo(n, u + r, n, u, y), i.arcTo(n, u, n + m, u, y), i.closePath()
+            }
+
+            function o(i, n, u, m) {
+                n && (i.fillStyle = n, i.fill()), u && (i.lineWidth = m, i.strokeStyle = u, i.stroke())
+            }
+            return s(e ? t(1 * .5, !1, "#4d0000 #4d0000 #4d0000 #4d0000 #4d0000 #614627 #614627 #c4a23a #c4a23a #c4a23a".split(" ")) : t(1 * .5, !1, "#4d6d8a #4d6d8a #4d6d8a #4d6d8a #4d6d8a #6a7f93 #6a7f93 #9bb9d3 #9bb9d3 #9bb9d3".split(" ")))
+        }
+        static DrawLockedChest() {
+            let e = w;
+            e.chest_locked_sprite != -1 && (e.settings.Visuals.ShowLockedChest ? (window.sprite[e.chest_locked_sprite][0] = window.sprite[e.chest_locked_sprite][2], window.sprite[e.chest_locked_sprite][1] = window.sprite[e.chest_locked_sprite][2], window.sprite[e.chest_unlocked_sprite][0] = window.sprite[e.chest_unlocked_sprite][2], window.sprite[e.chest_unlocked_sprite][1] = window.sprite[e.chest_unlocked_sprite][2]) : (window.sprite[e.chest_locked_sprite][0] = window.sprite[-e.chest_locked_sprite][0], window.sprite[e.chest_locked_sprite][1] = window.sprite[-e.chest_locked_sprite][1], window.sprite[e.chest_unlocked_sprite][0] = window.sprite[-e.chest_unlocked_sprite][0], window.sprite[e.chest_unlocked_sprite][1] = window.sprite[-e.chest_unlocked_sprite][1]))
+        }
+    };
+    k(w, "chest_locked_sprite", -1), k(w, "locked_chest_sprite", -1), k(w, "chest_unlocked_sprite", -1), k(w, "modified_chest_locked_sprite", -1), k(w, "settings", -1);
+    var x = w;
+    var v = class {
+        constructor(e, t, s, a) {
+            this.world = e, this.ctx = t, this.hooker = s, this.main = a, this.types = this.main.Types, this.context = {
+                settings: this.main.Configuration.Settings,
+                ctx: this.ctx,
+                user: this.main.hookedObjects.user
+            }
+        }
+        init() {
+            for (let e = 0; e < this.world.units.length; e++) this.world.units[e] || (this.world.units[e] = []), this.hooker.HookPushMethod(this.world.units, e, this.set_units.bind(this))
+        }
+        draw_info(e) {
+            if (e.settings.Visuals.Debugger.enabled) {
+                let t = 0,
+                    s = -20;
+                e.ctx.save(), e.ctx.textAlign = "left", e.ctx.textBaseline = "middle", e.ctx.lineWidth = 6, e.ctx.fillStyle = "white", e.ctx.strokeStyle = "black", e.ctx.font = "18px Baloo Paaji", this.right && (e.ctx.strokeText("HandItem: ".concat(this.right), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), e.ctx.fillText("HandItem: ".concat(this.right), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), t += 20), this.type && (e.ctx.strokeText("ID: ".concat(this.type), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), e.ctx.fillText("ID: ".concat(this.type), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), t += 20), this.info && !this._info && (e.ctx.strokeText("Info: ".concat(this.info), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), e.ctx.fillText("Info: ".concat(this.info), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), t += 20), this._info && (e.ctx.strokeText("Info: ".concat(this._info), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), e.ctx.fillText("Info: ".concat(this._info), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), t += 20), this.clothe && (e.ctx.strokeText("Hat: ".concat(this.clothe), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), e.ctx.fillText("Hat: ".concat(this.clothe), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), t += 20), this.vehicle && (e.ctx.strokeText("Vehicle: ".concat(this.vehicle), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), e.ctx.fillText("Vehicle: ".concat(this.vehicle), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), t += 20), this.ghost && (e.ctx.strokeText("isGhost: ".concat(this.ghost), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), e.ctx.fillText("isGhost: ".concat(this.ghost), this.x + e.user.cam.x + s, this.y + e.user.cam.y + t), t += 20), e.ctx.restore()
+            }
+        }
+        isAlly(e) {
+            return this.main.hookedObjects.user.team.includes(e) || this.main.hookedObjects.user.id == e
+        }
+        async set_units(e) {
+            let t = e[0],
+                s = () => this.draw_info.call(t, this.context);
+            switch (t.type) {
+                case this.types.entites.seed:
+                case this.types.entites.fire:
+                case this.types.entites.big_fire:
+                    await this.hooker.addProp(t, "draw_fg", -1, [
+                        ["SelfType", "Function"]
+                    ], 1), await this.hooker.addProp(t, "draw_bg", -1, [
+                        ["SelfType", "Function"]
+                    ], 0), t.draw_fg && t.draw_bg && (t.old_draw_fg = t.draw_fg, t.old_draw_bg = t.draw_bg, t.draw_fg = this.hooker.bindTo(t.draw_fg, s), t.draw_bg = this.hooker.bindTo(t.draw_bg, s));
+                    break;
+                case this.types.entites.players:
+                default:
+                    await this.hooker.addProp(t, "draw", -1, [
+                        ["SelfType", "Function"],
+                        ["StringHas", "this.angle"]
+                    ]), t.draw && (t.old_draw = t.old_draw || t.draw, t.draw = this.hooker.bindTo(t.draw, s));
+                    break
+            }
+        }
+    };
+    var O = class {
+        constructor(e, t) {
+            this.main = e, this.visuals = t, this.settings = this.main.Configuration.Settings, this.ctx = document.querySelector("canvas").getContext("2d"), this.user = this.main.hookedObjects.user
+        }
+        get_enabled_hacks() {
+            let e = [];
+            return this.settings.Aimbot.enabled && e.push("Aimbot"), this.settings.Aimbot.Animal_Aimbot.enabled && e.push("Animal Aimbot"), this.settings.Spectator.enabled && e.push("Spectator"), this.settings.Misc.AutoBook.enabled && e.push("AutoBook"), this.settings.Misc.AutoCraft.enabled && e.push("AutoCraft"), this.settings.Misc.AutoFire.enabled && e.push("AutoFire"), this.settings.Misc.AutoPilot.enabled && e.push("AutoPilot"), this.settings.Misc.AutoWall.enabled && e.push("AutoWall"), this.settings.Misc.AutoSpike.enabled && e.push("AutoSpike"), e
+        }
+        draw_enabled_hacks() {
+            let e = 22.5,
+                t = window.innerHeight - 20,
+                s = 10,
+                a = this.get_enabled_hacks();
+            if (this.settings.Visuals.ListEnabledHacks && c && c.readyState == WebSocket.OPEN)
+                for (let o of a) this.user.alive && (this.ctx.save(), this.ctx.beginPath(), this.ctx.textAlign = "left", this.ctx.textBaseline = "middle", this.ctx.lineWidth = 6, this.ctx.fillStyle = "#ffffff", this.ctx.strokeStyle = "#000000", this.ctx.font = "20px Baloo Paaji", this.ctx.strokeText(o, s, t), this.ctx.fillText(o, s, t), this.ctx.restore(), t -= e)
+        }
+    };
+    var P = class {
+        constructor(e, t) {
+            this.main = e, this.visuals = t, this.types = this.main.Types, this.settings = this.main.Configuration.Settings, this.user = this.main.hookedObjects.user, this.ctx = document.querySelector("canvas").getContext("2d")
+        }
+        draw_tracer() {
+            let e = this.main.hookedObjects.world.fast_units[user.uid];
+            for (let t in this.types.animals)
+                if (this.settings.Visuals.Tracers[t].enabled && this.user.alive && e && c.readyState == WebSocket.OPEN)
+                    for (let s of this.main.hookedObjects.world.units[this.types.animals[t]]) this.ctx.save(), this.ctx.strokeStyle = this.get_color(t), this.ctx.lineWidth = 2, this.ctx.beginPath(), this.ctx.moveTo(e.x + this.main.hookedObjects.user.cam.x, e.y + this.main.hookedObjects.user.cam.y), this.ctx.lineTo(s.x + this.main.hookedObjects.user.cam.x, s.y + this.main.hookedObjects.user.cam.y), this.ctx.stroke(), this.ctx.restore();
+            if (this.settings.Visuals.Tracers.Players.enabled && this.user.alive && e && c.readyState == WebSocket.OPEN)
+                for (let t of world.units[this.types.entites.players]) this.ctx.save(), this.ctx.strokeStyle = this.visuals.isAlly(Object.keys(t)[1]) ? "cyan" : "red", this.ctx.lineWidth = 2, this.ctx.beginPath(), this.ctx.moveTo(e.x + this.main.hookedObjects.user.cam.x, e.y + this.main.hookedObjects.user.cam.y), this.ctx.lineTo(t.x + this.main.hookedObjects.user.cam.x, t.y + this.main.hookedObjects.user.cam.y), this.ctx.stroke(), this.ctx.restore();
+            this.draw_info(e)
+        }
+        draw_info(e) {
+            let t = window.innerHeight / 2;
+            for (let s in this.settings.Visuals.Tracers)
+                if (this.settings.Visuals.Tracers[s].enabled && this.user.alive && e && c.readyState == WebSocket.OPEN) {
+                    let a = world.units[this.types.animals[s]] == null ? world.units[this.types.entites.players].length - 1 : world.units[this.types.animals[s]].length;
+                    this.ctx.save(), this.ctx.beginPath(), this.ctx.textAlign = "left", this.ctx.textBaseline = "middle", this.ctx.lineWidth = 6, this.ctx.fillStyle = "red", this.ctx.strokeStyle = "black", this.ctx.font = "18px Baloo Paaji", this.ctx.strokeText("".concat(s, ": ").concat(a), 10, t), this.ctx.fillText("".concat(s, ": ").concat(a), 10, t), this.ctx.restore(), t += 20
+                }
+        }
+        get_color(e) {
+            switch (e) {
+                case "Wolf":
+                    return "#FF6347";
+                case "Spider":
+                    return "#800080";
+                case "Rabbit":
+                    return "pink";
+                case "Boar":
+                    return "#8B4513";
+                case "Hawk":
+                    return "#D2691E";
+                case "GoldenChicken":
+                    return "#FFD700";
+                case "Crab":
+                    return "#DC143C";
+                case "KingCrab":
+                    return "#B22222";
+                case "Piranha":
+                    return "#FF4500";
+                case "Kraken":
+                    return "#800080";
+                case "ArcticFox":
+                    return "#ADD8E6";
+                case "PolarBear":
+                    return "#FFFFFF";
+                case "Dragon":
+                    return "#FF0000";
+                case "Mammoth":
+                    return "#8B4513";
+                case "Penguin":
+                    return "#000000";
+                case "BabyDragon":
+                    return "#FF6347";
+                case "BabyMammoth":
+                    return "#A0522D";
+                case "LavaDrag":
+                    return "#FF4500";
+                case "BabyLavaDrag":
+                    return "#FF6347";
+                case "LavaMonster":
+                    return "#FF8C00";
+                case "Sandworm":
+                    return "#C2B280";
+                case "Vulture":
+                    return "#808000";
+                case "GoldenHen":
+                    return "#FFD700";
+                case "Chicken":
+                    return "Yellow";
+                default:
+                    return "#FFFFFF"
+            }
+        }
+    };
+    var se = ["https://starve.io/img/day-baby-dragon-tamed.png", "https://starve.io/img/night-baby-dragon-tamed.png", "https://starve.io/img/day-wing-dragon-left-tamed.png", "https://starve.io/img/night-dragon-wing-left-tamed.png", "https://starve.io/img/day-wing-dragon-right-tamed.png", "https://starve.io/img/night-wing-dragon-right-tamed.png", "https://starve.io/img/day-baby-lava-tamed.png", "https://starve.io/img/night-baby-lava-tamed.png", "https://starve.io/img/day-wing-lava-left-tamed.png", "https://starve.io/img/night-wing-lava-left-tamed.png", "https://starve.io/img/day-wing-lava-right-tamed.png", "https://starve.io/img/night-wing-lava-right-tamed.png", "https://starve.io/img/day-falcon-wings-left-tamed.png", "https://starve.io/img/night-falcon-wings-left-tamed.png", "https://starve.io/img/day-falcon-wings-right-tamed.png", "https://starve.io/img/night-falcon-wings-right-tamed.png", "https://starve.io/img/day-falcon-tamed.png", "https://starve.io/img/night-falcon-tamed.png", "https://starve.io/img/day-parrot-wing-left-tamed.png", "https://starve.io/img/night-parrot-wing-left-tamed.png", "https://starve.io/img/day-parrot-wing-right-tamed.png", "https://starve.io/img/night-parrot-wing-right-tamed.png", "https://starve.io/img/day-parrot-tamed.png", "https://starve.io/img/night-parrot-tamed.png", "https://starve.io/img/day-vulture-wings-left-tamed.png", "https://starve.io/img/night-vulture-wings-left-tamed.png", "https://starve.io/img/day-vulture-wings-right-tamed.png", "https://starve.io/img/night-vulture-wings-right-tamed.png", "https://starve.io/img/day-vulture-tamed.png", "https://starve.io/img/night-vulture-tamed.png", "https://starve.io/img/day-plane.png", "https://starve.io/img/night-plane.png"];
+    var j = class {
+        constructor(e, t) {
+            this.main = e, this.visuals = t, this.settings = this.main.Configuration.Settings
+        }
+        init() {
+            CanvasRenderingContext2D.prototype.drawImage = new Proxy(CanvasRenderingContext2D.prototype.drawImage, {
+                apply: (function(e, t, s) {
+                    if (!s || s.length === 0) return;
+                    let [a, o, i, n, u] = s, m = a.width == 200 && a.height == 290 || a.height == 15;
+                    return this.settings.Visuals.Xray.enabled && c.readyState == WebSocket.OPEN && !m && (t.globalAlpha = this.settings.Visuals.Xray.opacity), this.settings.Visuals.RoofXray.enabled && n === -146 && u === -145 && (t.globalAlpha = this.settings.Visuals.RoofXray.opacity), this.settings.Visuals.VehicleXray.enabled && se.includes(a == null ? void 0 : a.src) && (t.globalAlpha = this.settings.Visuals.VehicleXray.opacity), e.apply(t, s)
+                }).bind(this)
+            })
+        }
+    };
+    var A = class {
+        constructor(e, t) {
+            this.main = e, this.world = t, this.settings = this.main.Configuration.Settings, this.ctx = document.querySelector("canvas").getContext("2d"), this.fps = 0, this.ping = 0, this.lt = performance.now(), this.lastUpdate = performance.now(), this.lastRun
+        }
+        draw_fps() {
+            let t = performance.now() - this.lt;
+            if (this.lt = performance.now(), !this.lastRun) {
+                this.lastRun = new Date().getTime();
+                return
+            }
+            var s = (new Date().getTime() - this.lastRun) / 1e3;
+            this.lastRun = new Date().getTime(), performance.now() - this.lastUpdate > 350 && (this.fps = Math.floor(1 / s), this.lastUpdate = performance.now());
+            let a = this.main.hookedObjects.user.auto_feed.translate.x - 100,
+                o = this.main.hookedObjects.user.auto_feed.translate.y;
+            a && o && this.settings.Visuals.Fps && c && c.readyState == WebSocket.OPEN && (this.ctx.save(), this.ctx.beginPath(), this.ctx.textAlign = "left", this.ctx.textBaseline = "middle", this.ctx.lineWidth = 6, this.ctx.fillStyle = "white", this.ctx.strokeStyle = "black", this.ctx.font = "28px Baloo Paaji", this.ctx.strokeText("Fps: ".concat(Math.floor(this.fps)), a, o), this.ctx.fillText("Fps: ".concat(Math.floor(this.fps)), a, o), this.ctx.restore())
+        }
+        draw_ping() {
+            let e = this.main.hookedObjects.user.auto_feed.translate.x,
+                t = this.main.hookedObjects.user.auto_feed.translate.y;
+            e && t && this.settings.Visuals.Ping && c && c.readyState == WebSocket.OPEN && (this.ctx.save(), this.ctx.beginPath(), this.ctx.textAlign = "left", this.ctx.textBaseline = "middle", this.ctx.lineWidth = 6, this.ctx.fillStyle = "white", this.ctx.strokeStyle = "black", this.ctx.font = "22px Baloo Paaji", this.ctx.strokeText("Ping: 69", e, t + 20), this.ctx.fillText("Ping: 69", e, t + 20), this.ctx.restore())
+        }
+        draw_speed() {}
+    };
+    var M = class {
+        constructor(e, t) {
+            this.main = e, this.visuals = t, this.spikes = this.get_spikes(), this.doors = this.get_doors(), this.door_spikes = this.get_door_spikes(), this.hooker = this.main.hooker, this.settings = this.main.Configuration.Settings, this.world = this.main.hookedObjects.world, this.sprite_positions = new Map, this.initialize_sprites.call(this, this.spikes), this.initialize_sprites.call(this, this.doors), this.initialize_sprites.call(this, this.door_spikes)
+        }
+        init() {
+            for (let e of this.spikes) this.hooker.HookPushMethod(this.world.units, e, this.set_units.bind(this));
+            for (let e of this.doors) this.hooker.HookPushMethod(this.world.units, e, this.set_units.bind(this));
+            for (let e of this.door_spikes) this.hooker.HookPushMethod(this.world.units, e, this.set_units.bind(this))
+        }
+        async set_units(e) {
+            let t = e[0],
+                s = this,
+                a = Object.keys(t).filter(o => !["id", "type", "x", "y", "angle", "action", "info"].includes(o)).reduce((o, i) => {
+                    let n = t[i];
+                    return typeof n == "number" && Number.isInteger(n) && n > 0 && n <= 1e3 && o.push(n), o
+                }, [])[0];
+            t.isAlly = this.visuals.isAlly(a), await this.hooker.addProp(t, "draw", -1, [
+                ["SelfType", "Function"],
+                ["StringHas", "this.angle"]
+            ]), t.draw && !t.old_draw && (t.old_draw = t.old_draw || t.draw), this.spikes.includes(t.type) && (t.draw = function() {
+                s.settings.Visuals.ColoredSpikes.enabled && (t.isAlly && t.old_draw.apply(this, [s.sprite_positions.get(t.type).ally]), t.isAlly || t.old_draw.apply(this, [s.sprite_positions.get(t.type).enemy])), s.settings.Visuals.ColoredSpikes.enabled || t.old_draw.apply(this, arguments)
+            }), (this.door_spikes.includes(t.type) || this.doors.includes(t.type)) && (t.draw = function() {
+                s.settings.Visuals.ColoredSpikes.enabled && (t.isAlly && (t.info & 1 && (s.visuals.ctx.globalAlpha = .4), t.old_draw.apply(this, [s.sprite_positions.get(t.type).ally]), s.visuals.ctx.globalAlpha = 1), t.isAlly || (t.info & 1 && (s.visuals.ctx.globalAlpha = .4), t.old_draw.apply(this, [s.sprite_positions.get(t.type).enemy]), s.visuals.ctx.globalAlpha = 1)), s.settings.Visuals.ColoredSpikes.enabled || t.old_draw.apply(this, arguments)
+            })
+        }
+        initialize_sprites(e) {
+            for (let t = 0; t < e.length; t++) {
+                let s = e[t],
+                    a = this.get_sprite(s, !0),
+                    o = this.get_sprite(s, !1),
+                    i = new Image;
+                i.src = a;
+                let n = new Image;
+                n.src = o;
+                let u, m;
+                do u = Math.floor(Math.random() * 1e4) + 1e4 + s; while (window.sprite[u] !== void 0);
+                window.sprite[u] = [i, i];
+                do m = Math.floor(Math.random() * 1e4) + 10001 + s; while (window.sprite[m] !== void 0);
+                window.sprite[m] = [n, n], this.sprite_positions.set(s, {
+                    ally: u,
+                    enemy: m
+                })
+            }
+        }
+        get_sprite(e, t) {
+            switch (e) {
+                case p.reidite_spike:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/reidite-spike-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-reidite-spike-enemy.png";
+                case p.amethyst_spike:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/amethyst-spike-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-amethyst-spike-enemy.png";
+                case p.diamond_spike:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/diamond-spike-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-diamond-spike-enemy.png";
+                case p.gold_spike:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/gold-spike-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-gold-spike-enemy.png";
+                case p.stone_spike:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/stone-spike-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-stone-spike-enemy.png";
+                case p.wood_spike:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/wood-spike-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-wood-spike-enemy.png";
+                case p.reidite_door:
+                    return t ? "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_reidite2.png" : "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_reidite1.png";
+                case p.amethyst_door:
+                    return t ? "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_amethyst1.png" : "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_amethyst2.png";
+                case p.diamond_door:
+                    return t ? "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_diamond2.png" : "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_diamond1.png";
+                case p.gold_door:
+                    return t ? "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_gold2.png" : "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_gold1.png";
+                case p.stone_door:
+                    return t ? "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_stone1.png" : "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_stone2.png";
+                case p.wood_door:
+                    return t ? "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_wood2.png" : "https://raw.githubusercontent.com/XmreLoux/weirdo/main/door_wood1.png";
+                case p.wood_door_spike:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/wood-spike-door-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-wood-spike-door-enemy.png";
+                case p.stone_spike_door:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/stone-spike-door-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-stone-spike-door-enemy.png";
+                case p.gold_spike_door:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/gold-spike-door-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-gold-spike-door-enemy.png";
+                case p.diamond_spike_door:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/diamond-spike-door-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-diamond-spike-door-enemy.png";
+                case p.amethyst_spike_door:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/amethyst-spike-door-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-amethyst-spike-door-enemy.png";
+                case p.reidite_spike_door:
+                    return t ? "https://github.com/RealSona/sponkos/blob/main/reidite-spike-door-ally.png?raw=true" : "https://raw.githubusercontent.com/XmreLoux/For_require/main/images/day-reidite-spike-door-enemy.png";
+                default:
+            }
+        }
+        get_spikes() {
+            return [p.wood_spike, p.stone_spike, p.gold_spike, p.diamond_spike, p.amethyst_spike, p.reidite_spike]
+        }
+        get_doors() {
+            return [p.wood_door, p.stone_door, p.gold_door, p.diamond_door, p.amethyst_door, p.reidite_door]
+        }
+        get_door_spikes() {
+            return [p.wood_door_spike, p.stone_spike_door, p.gold_spike_door, p.diamond_spike_door, p.amethyst_spike_door, p.reidite_spike_door]
+        }
+    };
+    var L = class {
+        constructor(e, t) {
+            this.main = e, this.visuals = t, this.settings = this.main.Configuration.Settings, this.hooker = this.main.hooker, this.world = this.main.hookedObjects.world, this.ctx = document.getElementById("game_canvas").getContext("2d"), this.actions = {
+                hit: 2
+            }
+        }
+        init() {
+            this.hooker.HookPushMethod(this.world.units, p.dead_box, this.set_units.bind(this)), this.hooker.HookPushMethod(this.world.units, p.crate, this.set_units.bind(this))
+        }
+        async set_units(e) {
+            let t = e[0],
+                s = () => this.on_hit.call(t, this);
+            await this.hooker.addProp(t, "draw", -1, [
+                ["SelfType", "Function"],
+                ["StringHas", "this.angle"]
+            ]), t.spawn_date = performance.now(), t.total_hits = 0, t.max_time = t.type == p.dead_box ? 241e3 : 17e3, t.name = t.type == p.dead_box ? "Dead Box" : "Drop", t.offset_x = t.type == p.dead_box ? 40 : 20, t.hitten || await this.hooker.addProp(t, "hitten", -1, [
+                ["SelfType", "Function"],
+                ["StringHas", "angle"]
+            ]), t.hitten && (t.hitten = this.hooker.bindTo(t.hitten, s))
+        }
+        on_hit(e) {
+            this.action == e.actions.hit && this.last_state != e.actions.hit && this.total_hits++, this.last_state = this.action, e.draw_box_info.call(this, e)
+        }
+        draw_box_info(e) {
+            if (e.settings.Visuals.BoxInfo.enabled) {
+                let t = performance.now() - this.spawn_date,
+                    s = Math.max(this.max_time - t, 0),
+                    a = Math.floor(s / 1e3);
+                e.ctx.save(), e.ctx.beginPath(), e.ctx.textAlign = "left", e.ctx.textBaseline = "middle", e.ctx.lineWidth = 6, e.ctx.fillStyle = "white", e.ctx.strokeStyle = "black", e.ctx.font = "22px Baloo Paaji", e.ctx.strokeText(this.name, this.x + user.cam.x - this.offset_x, this.y + user.cam.y - 10), e.ctx.fillText(this.name, this.x + user.cam.x - this.offset_x, this.y + user.cam.y - 10), e.ctx.restore(), e.ctx.save(), e.ctx.beginPath(), e.ctx.textAlign = "left", e.ctx.textBaseline = "middle", e.ctx.lineWidth = 6, e.ctx.fillStyle = "white", e.ctx.strokeStyle = "black", e.ctx.font = "22px Baloo Paaji", e.ctx.strokeText("Time: ".concat(a, "s"), this.x + user.cam.x - this.offset_x, this.y + user.cam.y + 20), e.ctx.fillText("Time: ".concat(a, "s"), this.x + user.cam.x - this.offset_x, this.y + user.cam.y + 20), e.ctx.restore()
+            }
+        }
+    };
+    var C = class {
+        constructor(e) {
+            this.main = e, this.ctx = document.querySelector("canvas").getContext("2d"), this.Debugger = new v(this.main.hookedObjects.world, this.ctx, this.main.hooker, this.main), this.Tracers = new P(this.main, this), this.ListEnabledHacks = new O(this.main, this), this.ChestVisuals = new x(this), this.xray = new j(this.main, this), this.clientinfo = new A(this.main), this.colored_spikes = new M(this.main, this), this.BoxVisuals = new L(this.main, this)
+        }
+        isAlly(e) {
+            return this.main.hookedObjects.user.team.includes(e) || this.main.hookedObjects.user.id == e
+        }
+        ctxDrawImage(e, t, s, a, o, i, n, u, m, r) {
+            (t.tryLoad === void 0 || t.tryLoad() === 1) && (r !== void 0 ? e.drawImage(t, s, a, window.Math.max(1, o), window.Math.max(1, i), n, u, m, r) : i !== void 0 ? e.drawImage(t, s, a, o, i) : e.drawImage(t, s, a))
+        }
+        init() {
+            this.Debugger.init(), this.colored_spikes.init(), this.main.addListener("MainRun", this.Tracers.draw_tracer.bind(this.Tracers)), this.main.addListener("MainRun", this.ListEnabledHacks.draw_enabled_hacks.bind(this.ListEnabledHacks)), this.main.addListener("MainRun", this.clientinfo.draw_fps.bind(this.clientinfo)), this.ChestVisuals.init(), this.BoxVisuals.init(), this.xray.init()
+        }
+    };
+
+    function ae() {
+        return document.getElementById("chat_block").style.display === "inline-block" || document.getElementById("commandMainBox").style.display === "inline-block"
+    }
+
+    function oe(d) {
+        return typeof window < "u" ? new window.guify(d) : !1
+    }
+
+    function re() {
+        return typeof window.guify < "u" ? delete window.guify : !1
+    }
+
+    function ne(d, e) {
+        for (let t of e) d.Register({
+            type: "folder",
+            label: t.name,
+            open: !1
+        }, {
+            folder: t.appendTo
+        })
+    }
+
+    function de(d, e) {
+        for (let t of e)
+            if (d.Register({
+                    type: t.type,
+                    label: t.label,
+                    object: t.object,
+                    property: t.property,
+                    onChange: t.onChange || function() {},
+                    action: t.action || function() {}
+                }, {
+                    folder: t.appendTo
+                }), t.isKeyBind) {
+                let s = function(o) {
+                        t.object.key == o.code && !ae() && (t.object.enabled = t.isHold ? !0 : !t.object.enabled)
+                    },
+                    a = function(o) {
+                        t.object.key == o.code && !ae() && t.isHold && (t.object.enabled = !1)
+                    };
+                _.addListener("keydown", s), _.addListener("keyup", a)
+            }
+    }
+
+    function le() {
+        document.querySelectorAll = new Proxy(document.querySelectorAll, {
+            apply: function(d, e, t) {
+                return t[0] == '[class*="guify"]' ? [] : d.apply(e, t)
+            }
+        })
+    }
+
+    function T(d) {
+        d.key = "Press any key...", document.addEventListener("keydown", function e(t) {
+            if (document.removeEventListener("keydown", e), t.code == "Escape") return d.key = "NONE";
+            d.key = t.code
+        })
+    }
+    async function he() {
+        return new Promise((d, e) => {
+            async function t() {
+                let s = document.createElement("script");
+                s.onload = function() {
+                    d()
+                }, s.src = "https://unpkg.com/guify@0.12.0/lib/guify.min.js", document.body.appendChild(s)
+            }
+            try {
+                t()
+            } catch (s) {
+                setTimeout(t, 1e3)
+            }
+        })
+    }
+    var ce = {
+            title: "Meow Cult >:3",
+            align: "right",
+            width: 500,
+            theme: {
+                name: "LOUX",
+                colors: {
+                    panelBackground: "#00000099",
+                    componentBackground: "black",
+                    componentForeground: "#00ff4c",
+                    textPrimary: "#00ff4c",
+                    textSecondary: "#00ff4c",
+                    textHover: "black "
+                },
+                font: {
+                    fontFamily: "Baloo Paaji",
+                    fontSize: "20px",
+                    fontWeight: "1"
+                }
+            },
+            barMode: "none",
+            panelMode: "none",
+            opacity: .6,
+            root: typeof window < "u" ? window.container : void 0,
+            open: !1
+        },
+        pe = [{
+            name: "Visuals"
+        }, {
+            name: "Tracers",
+            appendTo: "Visuals"
+        }, {
+            name: "Main",
+            appendTo: "Visuals"
+        }, {
+            name: "Misc"
+        }, {
+            name: "Token Management"
+        }, {
+            name: "Binds"
+        }],
+        ue = [{
+            type: "checkbox",
+            label: "Players",
+            object: h.Visuals.Tracers.Players,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Wolf",
+            object: h.Visuals.Tracers.Wolf,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Spider",
+            object: h.Visuals.Tracers.Spider,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Rabbit",
+            object: h.Visuals.Tracers.Rabbit,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Boar",
+            object: h.Visuals.Tracers.Boar,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Hawk",
+            object: h.Visuals.Tracers.Hawk,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "GoldenChicken",
+            object: h.Visuals.Tracers.GoldenChicken,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Crab",
+            object: h.Visuals.Tracers.Crab,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "KingCrab",
+            object: h.Visuals.Tracers.KingCrab,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Piranha",
+            object: h.Visuals.Tracers.Piranha,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Kraken",
+            object: h.Visuals.Tracers.Kraken,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "ArcticFox",
+            object: h.Visuals.Tracers.ArcticFox,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "PolarBear",
+            object: h.Visuals.Tracers.PolarBear,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Dragon",
+            object: h.Visuals.Tracers.Dragon,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Mammoth",
+            object: h.Visuals.Tracers.Mammoth,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Penguin",
+            object: h.Visuals.Tracers.Penguin,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "BabyDragon",
+            object: h.Visuals.Tracers.BabyDragon,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "BabyMammoth",
+            object: h.Visuals.Tracers.BabyMammoth,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "LavaDrag",
+            object: h.Visuals.Tracers.LavaDrag,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "BabyLavaDrag",
+            object: h.Visuals.Tracers.BabyLavaDrag,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "LavaMonster",
+            object: h.Visuals.Tracers.LavaMonster,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Sandworm",
+            object: h.Visuals.Tracers.Sandworm,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Vulture",
+            object: h.Visuals.Tracers.Vulture,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "GoldenHen",
+            object: h.Visuals.Tracers.GoldenHen,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "Chicken",
+            object: h.Visuals.Tracers.Chicken,
+            property: "enabled",
+            appendTo: "Tracers"
+        }, {
+            type: "checkbox",
+            label: "DrawItemsOnChest",
+            object: h.Visuals.DrawItemsOnChest,
+            property: "enabled",
+            appendTo: "Main"
+        }, {
+            type: "checkbox",
+            label: "ShowLockedChest",
+            object: h.Visuals.ShowLockedChest,
+            property: "enabled",
+            appendTo: "Main",
+            onChange: d => {
+                x.DrawLockedChest()
+            }
+        }, {
+            type: "checkbox",
+            label: "JoinNLeaves",
+            object: h.Visuals.JoinNLeaves,
+            property: "enabled",
+            appendTo: "Main"
+        }, {
+            type: "checkbox",
+            label: "ShowHoodNames",
+            object: h.Visuals.ShowHoodNames,
+            property: "enabled",
+            appendTo: "Main"
+        }, {
+            type: "checkbox",
+            label: "Timers",
+            object: h.Visuals.Timers,
+            property: "enabled",
+            appendTo: "Main"
+        }, {
+            type: "checkbox",
+            label: "ColoredSpikes",
+            object: h.Visuals.ColoredSpikes,
+            property: "enabled",
+            appendTo: "Main"
+        }, {
+            type: "checkbox",
+            label: "Xray",
+            object: h.Visuals.Xray,
+            property: "enabled",
+            appendTo: "Main",
+            onChange: d => {}
+        }, {
+            type: "checkbox",
+            label: "RoofXray",
+            object: h.Visuals.RoofXray,
+            property: "enabled",
+            appendTo: "Main"
+        }, {
+            type: "checkbox",
+            label: "BoxInfo",
+            object: h.Visuals.BoxInfo,
+            property: "enabled",
+            appendTo: "Main"
+        }, {
+            type: "checkbox",
+            label: "Debugger",
+            object: h.Visuals.Debugger,
+            property: "enabled",
+            appendTo: "Main"
+        }, {
+            type: "checkbox",
+            label: "ListEnabledHacks",
+            object: h.Visuals.ListEnabledHacks,
+            property: "enabled",
+            appendTo: "Main"
+        }, {
+            type: "checkbox",
+            label: "AutoBook",
+            object: h.Misc.AutoBook,
+            property: "enabled",
+            appendTo: "Misc"
+        }, {
+            type: "checkbox",
+            label: "Aimbot",
+            object: h.Misc.Aimbot,
+            property: "enabled",
+            appendTo: "Misc"
+        }, {
+            type: "checkbox",
+            label: "AutoPilot",
+            object: h.Misc.AutoPilot,
+            property: "enabled",
+            appendTo: "Misc"
+        }, {
+            type: "display",
+            label: "Spectator Key: ",
+            isKeyBind: !0,
+            object: h.Spectator,
+            property: "key",
+            appendTo: "Binds"
+        }, {
+            type: "button",
+            label: "Set Spectator Key",
+            action: () => T(h.Spectator),
+            appendTo: "Binds"
+        }, {
+            type: "display",
+            label: "Xray Key: ",
+            isKeyBind: !0,
+            object: h.Visuals.Xray,
+            property: "key",
+            appendTo: "Binds"
+        }, {
+            type: "button",
+            label: "Set Xray Key",
+            action: () => T(h.Visuals.Xray),
+            appendTo: "Binds"
+        }, {
+            type: "display",
+            label: "AutoCraft Key: ",
+            isKeyBind: !0,
+            object: h.Misc.AutoCraft,
+            property: "key",
+            appendTo: "Binds"
+        }, {
+            type: "button",
+            label: "Set AutoCraft Key",
+            action: () => T(h.Misc.AutoCraft),
+            appendTo: "Binds"
+        }, {
+            type: "display",
+            label: "Aimbot Key: ",
+            isKeyBind: !0,
+            object: h.Misc.Aimbot,
+            property: "key",
+            appendTo: "Binds"
+        }, {
+            type: "button",
+            label: "Set Aimbot Key",
+            action: () => T(h.Misc.Aimbot),
+            appendTo: "Binds"
+        }, {
+            type: "display",
+            label: "AutoFire Key: ",
+            isKeyBind: !0,
+            isHold: !0,
+            object: h.Misc.AutoFire,
+            property: "key",
+            appendTo: "Binds"
+        }, {
+            type: "button",
+            label: "Set AutoFire Key",
+            action: () => T(h.Misc.AutoFire),
+            appendTo: "Binds"
+        }, {
+            type: "display",
+            label: "AutoWall Key: ",
+            isKeyBind: !0,
+            isHold: !0,
+            object: h.Misc.AutoWall,
+            property: "key",
+            appendTo: "Binds"
+        }, {
+            type: "button",
+            label: "Set AutoWall Key",
+            action: () => T(h.Misc.AutoWall),
+            appendTo: "Binds"
+        }, {
+            type: "display",
+            label: "AutoSpike Key: ",
+            isKeyBind: !0,
+            isHold: !0,
+            object: h.Misc.AutoSpike,
+            property: "key",
+            appendTo: "Binds"
+        }, {
+            type: "button",
+            label: "Set AutoSpike Key",
+            action: () => T(h.Misc.AutoSpike),
+            appendTo: "Binds"
+        }];
+    var F = class {
+        constructor(e) {
+            this.main = e
+        }
+        init() {
+            typeof this.main.hookedObjects.world.multi_py > "u" && (this.main.hookedObjects.world.multi_py = 1e3), this.main.hookedObjects.client.units = this.main.hooker.bindTo(this.main.hookedObjects.client.units, this.update_units.bind(this))
+        }
+        update_units(e, t, s) {
+            for (var a = new Uint16Array(e), o = (t.length - 2) / 20, i = 0; i < o; i++) {
+                var n = 2 + 20 * i,
+                    u = 1 + 10 * i,
+                    m = a[u + 5],
+                    r = t[n],
+                    y = r * this.main.hookedObjects.world.multi_py + m,
+                    me = a[u + 2],
+                    S = a[u + 6],
+                    fe = a[u + 7],
+                    ge = a[u + 9];
+                if (world.fast_units[y]) {
+                    let b = world.fast_units[y];
+                    b.pid = r
+                }
+                if (me == this.main.Types.entites.players && world.fast_units[y]) {
+                    let b = world.fast_units[y];
+                    b.uid = y, b.pid = r, b.extra = fe, b._info = S, b.clothe = ge, b.pid == this.main.hookedObjects.user.id && (this.main.hookedObjects.user.uid = b.uid), S & 16384 ? (S = -16385 & S, b.bag = 1) : b.bag = 0, S -= 128 * b.clothe, b.vehicle = b.extra & 65535, b.ghost = b.right == 2
+                }
+            }
+        }
+    };
+    var l = Inventory = {
+        book: 46,
+        fire: 204,
+        big_fire: 209,
+        hawk: 339,
+        parrot: 354,
+        baby_lava_dragon: 338,
+        baby_dragon: 337,
+        plane: 340,
+        pilot_hat: 155,
+        wooden_axe: 167,
+        stone_axe: 168,
+        golden_axe: 169,
+        diamond_axe: 170,
+        amethyst_axe: 171,
+        reidite_axe: 172,
+        emerald_axe: 173,
+        copper_axe: 174,
+        iron_axe: 175,
+        topaz_axe: 176,
+        sapphire_axe: 177,
+        jade_axe: 178,
+        ruby_axe: 179,
+        coal_axe: 180,
+        aquamarine_axe: 181,
+        stone_sword: 0,
+        gold_sword: 5,
+        diamond_sword: 6,
+        pirate_sword: 9,
+        amethyst_sword: 48,
+        reidite_sword: 28,
+        wood_sword: 103,
+        dragon_sword: 108,
+        lava_dragon_sword: 109,
+        emerald_sword: 110,
+        copper_sword: 111,
+        iron_sword: 112,
+        topaz_sword: 113,
+        sapphire_sword: 114,
+        jade_sword: 115,
+        ruby_sword: 116,
+        coal_sword: 117,
+        aquamarine_sword: 118,
+        wood_spear: 12,
+        stone_spear: 13,
+        gold_spear: 14,
+        diamond_spear: 15,
+        crab_spear: 18,
+        amethyst_spear: 60,
+        emerald_spear: 19,
+        copper_spear: 20,
+        iron_spear: 21,
+        topaz_spear: 22,
+        sapphire_spear: 23,
+        jade_spear: 24,
+        ruby_spear: 25,
+        coal_spear: 26,
+        aquamarine_spear: 27,
+        reidite_spear: 61
+    };
+    var B = class {
+        constructor(e, t) {
+            this.main = e, this.misc = t, this.settings = this.main.Configuration.Settings, this.world = this.main.hookedObjects.world, this.user = this.main.hookedObjects.user, this.last_attack = performance.now(), this.target = void 0, this.visual_angle = -1, this.main.addListener("mousemove", this.settings.Aimbot.enabled && this.target && this.visual_angle)
+        }
+        run() {
+            let e = this.world.fast_units[this.user.uid];
+            if (c && c.readyState == WebSocket.OPEN && e && this.settings.Aimbot.enabled && performance.now() - this.last_attack > 100) {
+                let t = this.misc.getWeaponRange(e.right);
+                if (t) {
+                    let s = this.misc.GetEntityInRange(e, p.players, t);
+                    if (this.target = s[0], this.target) {
+                        let a = this.misc.get255Angle(this.misc.calcAngle2(e, this.target, !0));
+                        c.send(JSON.stringify([g.send_attack, a])), c.send(JSON.stringify([g.stop_attack])), this.visual_angle = {
+                            x: this.main.hookedObjects.user.cam.x + this.target.x,
+                            y: this.main.hookedObjects.user.cam.y + this.target.y
+                        }, this.last_attack = performance.now(), this.main.hookedObjects.mouse.position.x = this.visual_angle.x, this.main.hookedObjects.mouse.position.y = this.visual_angle.y
+                    }
+                } else this.target = !1
+            }
+        }
+    };
+    var I = class {
+        constructor(e, t) {
+            this.main = e, this.misc = t, this.settings = this.main.Configuration.Settings, this.client = this.main.hookedObjects.client, this.original_craft = this.main.hookedObjects.client.select_craft, this.client.last_craft_id = -1
+        }
+        init() {
+            let e = this;
+            this.client.select_craft = new Proxy(this.client.select_craft, {
+                apply: function(t, s, a) {
+                    if (e.settings.Misc.AutoBook.enabled) {
+                        let o = world.fast_units[user.uid];
+                        o && o.right != l.book && e.client.select_inv(l.book)
+                    }
+                    return e.client.last_craft_id = a[0], t.apply(s, a)
+                }
+            })
+        }
+    };
+    var V = class {
+        constructor(e, t) {
+            this.main = e, this.misc = t, this.settings = this.main.Configuration.Settings, this.client = this.main.hookedObjects.client, this.last_craft = performance.now()
+        }
+        run() {
+            this.settings.Misc.AutoCraft.enabled && c && c.readyState == WebSocket.OPEN && this.client.last_craft_id != -1 && performance.now() - this.last_craft > 100 && (this.client.select_craft(this.client.last_craft_id), this.last_craft = performance.now())
+        }
+    };
+    var E = class {
+        constructor(e, t) {
+            this.main = e, this.misc = t, this.last_fire = performance.now(), this.settings = this.main.Configuration.Settings, this.client = this.main.hookedObjects.client
+        }
+        run() {
+            if (this.settings.Misc.AutoFire.enabled && c && c.readyState == WebSocket.OPEN && performance.now() - this.last_fire > 200) {
+                let e = world.fast_units[user.uid];
+                e && (c.send(JSON.stringify([g.send_build, l.fire, this.misc.get255Angle(e.angle), 0])), c.send(JSON.stringify([g.send_build, l.big_fire, this.misc.get255Angle(e.angle), 0])), this.last_fire = performance.now())
+            }
+        }
+    };
+    var H = class {
+        constructor(e, t) {
+            this.main = e, this.misc = t, this.settings = this.main.Configuration.Settings, this.client = this.main.hookedObjects.client, this.user = this.main.hookedObjects.user, this.last_spike = performance.now(), this.spikes = [g.reidite_spike, g.amethyst_spike, g.diamond_spike, g.gold_spike, g.stone_spike, g.wood_spike, g.wood_wall]
+        }
+        get_spike() {
+            for (let e of this.spikes)
+                if (this.user.inv.n[e]) return e;
+            return 0
+        }
+        run() {
+            if (this.settings.Misc.AutoSpike.enabled && c && c.readyState == WebSocket.OPEN && performance.now() - this.last_spike > 100) {
+                let e = world.fast_units[user.uid],
+                    t = this.get_spike();
+                if (e && t) {
+                    for (let s = 0; s <= 48; s += 8) c.send(JSON.stringify([g.send_build, t, (this.misc.get255Angle(e.angle) + s) % 255, 0])), c.send(JSON.stringify([g.send_build, t, (this.misc.get255Angle(e.angle) - s) % 255, 0]));
+                    this.last_spike = performance.now()
+                }
+            }
+        }
+    };
+    var D = class {
+        constructor(e, t) {
+            this.main = e, this.misc = t, this.settings = this.main.Configuration.Settings, this.client = this.main.hookedObjects.client, this.user = this.main.hookedObjects.user, this.last_wall = performance.now(), this.walls = [g.wood_wall, g.stone_wall, g.gold_wall, g.diamond_wall, g.amethyst_wall, g.reidite_wall]
+        }
+        get_wall() {
+            for (let e of this.walls)
+                if (this.user.inv.n[e]) return e;
+            return 0
+        }
+        run() {
+            if (this.settings.Misc.AutoWall.enabled && c && c.readyState == WebSocket.OPEN && performance.now() - this.last_wall > 100) {
+                let e = world.fast_units[user.uid],
+                    t = this.get_wall();
+                if (e && t) {
+                    for (let s = 0; s <= 48; s += 8) c.send(JSON.stringify([g.send_build, t, (this.misc.get255Angle(e.angle) + s) % 255, 0])), c.send(JSON.stringify([g.send_build, t, (this.misc.get255Angle(e.angle) - s) % 255, 0]));
+                    this.last_wall = performance.now()
+                }
+            }
+        }
+    };
+    var R = class {
+        constructor(e, t) {
+            this.main = e, this.misc = t, this.settings = this.main.Configuration.Settings, this.objects = this.main.hookedObjects, this.old_cam = this.objects.user.cam.update, this.old_set = this.objects.client.set_cam, this.old_move = this.objects.client.send_move, this.last_spectator_state = this.settings.Spectator.enabled, this.range = 50
+        }
+        run() {
+            if (this.settings.Spectator.enabled) return this.objects.user.cam.update = () => {}, this.objects.client.set_cam = () => {}, this.objects.client.send_move = () => {}, this.objects.keyboard.is_left() && Math.abs(user.cam.x) > -2 && (user.cam.x += this.range), this.objects.keyboard.is_right() && Math.abs(user.cam.x) < this.objects.world.w && (user.cam.x -= this.range), this.objects.keyboard.is_bottom() && Math.abs(user.cam.y) > -2 && (user.cam.y += this.range), this.objects.keyboard.is_top() && Math.abs(user.cam.y) < this.objects.world.h && (user.cam.y -= this.range), this.last_spectator_state = this.settings.Spectator.enabled, !0;
+            this.objects.user.cam.update = this.old_cam, this.objects.client.set_cam = this.old_set, this.objects.client.send_move = this.old_move, this.last_spectator_state != this.settings.Spectator.enabled && c.send(JSON.stringify([g.restore_cam])), this.last_spectator_state = this.settings.Spectator.enabled
+        }
+    };
+    var N = class {
+        constructor(e) {
+            this.main = e, this.swords = [l.stone_sword, l.gold_sword, l.diamond_sword, l.pirate_sword, l.amethyst_sword, l.reidite_sword, l.wood_sword, l.dragon_sword, l.lava_dragon_sword, l.emerald_sword, l.copper_sword, l.iron_sword, l.topaz_sword, l.sapphire_sword, l.jade_sword, l.ruby_sword, l.coal_sword, l.aquamarine_sword], this.axes = [l.wooden_axe, l.stone_axe, l.golden_axe, l.diamond_axe, l.amethyst_axe, l.reidite_axe, l.emerald_axe, l.copper_axe, l.iron_axe, l.topaz_axe, l.sapphire_axe, l.jade_axe, l.ruby_axe, l.coal_axe, l.aquamarine_axe], this.spears = [l.wood_spear, l.stone_spear, l.gold_spear, l.diamond_spear, l.crab_spear, l.amethyst_spear, l.emerald_spear, l.copper_spear, l.iron_spear, l.topaz_spear, l.sapphire_spear, l.jade_spear, l.ruby_spear, l.coal_spear, l.aquamarine_spear, l.reidite_spear], this.aimbot = new B(this.main, this), this.spectator = new R(this.main, this), this.autobook = new I(this.main, this), this.autocraft = new V(this.main, this), this.autofire = new E(this.main, this), this.autowall = new D(this.main, this), this.autospike = new H(this.main, this)
+        }
+        init() {
+            this.main.addListener("MainRun", this.aimbot.run.bind(this.aimbot)), this.main.addListener("MainRun", this.spectator.run.bind(this.spectator)), this.main.addListener("MainRun", this.autocraft.run.bind(this.autocraft)), this.main.addListener("MainRun", this.autofire.run.bind(this.autofire)), this.main.addListener("MainRun", this.autowall.run.bind(this.autowall)), this.main.addListener("MainRun", this.autospike.run.bind(this.autospike)), this.autobook.init()
+        }
+        getWeaponRange(e, t = !1) {
+            switch (!0) {
+                case this.swords.includes(e):
+                    return t ? 200 : 160;
+                case this.spears.includes:
+                    return t ? 295 : 230;
+                case this.axes.includes:
+                    return t ? 135 : 155;
+                default:
+                    return 0
+            }
+        }
+        isAlly(e) {
+            return this.main.hookedObjects.user.team.includes(e) || this.main.hookedObjects.user.id == e
+        }
+        GetEntityInRange(e, t, s, a = !1) {
+            return this.main.hookedObjects.world.units[t].filter(i => {
+                let n = this.calcDist(e, i, a),
+                    u = this.isAlly(i.pid);
+                return t == p.players && i.pid == this.main.hookedObjects.user.id || n > s ? !1 : {
+                    target: i,
+                    distance: n,
+                    isAlly: u
+                }
+            }).sort((i, n) => i.distance - n.distance)
+        }
+        get255Angle(e) {
+            return Math.floor((e + Math.PI * 2) % (Math.PI * 2) * 255 / (Math.PI * 2))
+        }
+        calcAngle2(e, t, s = !1) {
+            let a = s ? e.r : e,
+                o = s ? t.r : t,
+                i = o.x - a.x,
+                n = o.y - a.y;
+            return Math.atan2(n, i)
+        }
+        calcDist(e, t, s = !1) {
+            switch (s) {
+                case !1:
+                    return Math.sqrt((t.x - e.x) * (t.x - e.x) + (t.y - e.y) * (t.y - e.y));
+                case !0:
+                    return Math.sqrt((t.r.x - e.r.x) * (t.r.x - e.r.x) + (t.r.y - e.r.y) * (t.r.y - e.r.y))
+            }
+        }
+    };
+    var U = class {
+            constructor() {
+                this.hookedObjects = {}, this.Types = {
+                    entites: p,
+                    animals: X
+                }, this.Configuration = {
+                    Settings: h
+                }, this.gui = {
+                    theme: ce,
+                    folders: pe,
+                    options: ue,
+                    CreateOptions: de,
+                    CreateFolders: ne,
+                    LoadGUIPackage: he,
+                    Remove_Package: re,
+                    Create: oe,
+                    preventDetection: le
+                }, this.addListener = ie, this.main_objects = Q, this.hooker = new J(this), this.unit_updater = new F(this), this.InitiliazeHooks(), this.InitiliazeGUI()
+            }
+            async InitiliazeProperties() {
+                await this.hooker.addProp(window, "sprite", -1, [
+                    ["SelfType", "Array"],
+                    ["SubPropType", "Array", 1],
+                    ["Length", null, 100]
+                ]), await this.hooker.addProp(this.hookedObjects.client, "gauges", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", ".c"]
+                ]), await this.hooker.addProp(this.hookedObjects.client, "join_new_team", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", "push", "for", "length"],
+                    ["!StringHas", "undefined", "math", "+=", "fetch", "stringify", "indexOf", "Uint16Array"]
+                ]), await this.hooker.addProp(this.hookedObjects.client, "units", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", "Uint16Array", ".action", ".info", ".y", ".id"]
+                ]), await this.hooker.addProp(this.hookedObjects.client, "set_cam", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", "new Uint16Array"]
+                ], 0), await this.hooker.addProp(this.hookedObjects.client, "send_move", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", "stringify"]
+                ], 33), await this.hooker.addProp(this.hookedObjects.client, "select_craft", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", ".length", ".max", "stringify"]
+                ]), await this.hooker.addProp(this.hookedObjects.client, "select_inv", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", ".wait", ".right", "stringify", "case"]
+                ]), await this.hooker.addProp(this.hookedObjects.client, "send_build", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", "Math.PI", ".angle", "stringify", ".mode"]
+                ]), await this.hooker.addProp(this.hookedObjects.user, "token", -1, [
+                    ["SelfType", "string"]
+                ], 0), await this.hooker.addProp(this.hookedObjects.user, "token_id", -1, [
+                    ["SelfType", "string"]
+                ], 1), await this.hooker.addProp(this.hookedObjects.user, "cam", -1, [
+                    ["HasProperty", "x", "y", "rx", "ry"]
+                ]), await this.hooker.addProp(this.hookedObjects.user, "inv", -1, [
+                    ["HasProperty", "max"],
+                    ["SubPropType", "Array", 2]
+                ]), await this.hooker.addProp(this.hookedObjects.user.inv, "n", -1, [
+                    ["SelfType", "Array"]
+                ]), await this.hooker.addProp(this.hookedObjects.user.control, "update", -1, [
+                    ["SelfType", "Function"]
+                ]), await this.hooker.addProp(this.hookedObjects.user, "gauges", -1, [
+                    ["HasProperty", "c"]
+                ]), await this.hooker.addProp(this.hookedObjects.user.gauges, "update", -1, [
+                    ["SelfType", "Function"]
+                ]), await this.hooker.addProp(this.hookedObjects.user.cam, "h", 14), await this.hooker.addProp(this.hookedObjects.user.cam, "update", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", "reconnect"]
+                ]), await this.hooker.addProp(this.hookedObjects.user, "auto_feed", -1, [
+                    ["SelfType", "Object"],
+                    ["HasProperty", "enabled", "translate"]
+                ], 1), await this.hooker.addProp(this.hookedObjects.mouse, "position", 4, [
+                    ["HasProperty", "x", "y"]
+                ]), await this.hooker.addProp(this.hookedObjects.world, "units", -1, [
+                    ["SelfType", "Array"],
+                    ["SubPropType", "Array", "All"],
+                    ["Length", null, 100, 200]
+                ]), await this.hooker.addProp(this.hookedObjects.UI, "chest_buttons", -1, [
+                    ["SelfType", "Array"],
+                    ["Length", null, 300, 500]
+                ]), await this.hooker.addProp(this.hookedObjects.keyboard, "is_left", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", "||"]
+                ], 1), await this.hooker.addProp(this.hookedObjects.keyboard, "is_right", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", "||"]
+                ], 2), await this.hooker.addProp(this.hookedObjects.keyboard, "is_bottom", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", "||"]
+                ], 3), await this.hooker.addProp(this.hookedObjects.keyboard, "is_top", -1, [
+                    ["SelfType", "Function"],
+                    ["StringHas", "||"]
+                ], 4), this.hookedObjects.user.team || this.hooker.defineProp(this.hookedObjects.user, "team", this.hookedObjects.client.join_new_team.toString().match(/\.([^\s.]+)\.push/)[1]), this.hookedObjects.world.fast_units || this.hooker.defineProp(this.hookedObjects.world, "fast_units", this.hookedObjects.user.control.update.toString().replace(/\s+/g, "").match(/\.(\S+?)(?=\[)/)[1]);
+                for (let e of this.hookedObjects.UI.chest_buttons) e && await this.hooker.addProp(e.info, "img", -1, [
+                    ["SelfType", "Array"]
+                ]);
+                this.InitiliazeVisuals(), this.InitialiazeMisc(), this.unit_updater.init(), G()
+            }
+            InitiliazeVisuals() {
+                this.visuals = new C(this), this.visuals.init()
+            }
+            InitialiazeMisc() {
+                this.misc = new N(this), this.misc.init()
+            }
+            async InitiliazeHooks() {
+                this.hooker.preventDetection(this.main_objects);
+                for (let e in this.main_objects) this.hooker.AddToQueue(e);
+                for (let e in this.main_objects) this.hooker.MainHook(this.main_objects[e], this.InitiliazeProperties)
+            }
+            async InitiliazeGUI() {
+                this.gui.preventDetection(), await this.gui.LoadGUIPackage(), this.gui.instance = this.gui.Create(this.gui.theme), this.gui.CreateFolders(this.gui.instance, this.gui.folders), this.gui.CreateOptions(this.gui.instance, this.gui.options), this.gui.Remove_Package()
+            }
+        },
+        _ = new U;
+})();
