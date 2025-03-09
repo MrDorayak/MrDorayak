@@ -53,15 +53,15 @@
             Xray: {
                 key: "KeyE",
                 enabled: !1,
-                opacity: .4
+                opacity: .6
             },
             VehicleXray: {
                 enabled: !0,
-                opacity: .4
+                opacity: .6
             },
             RoofXray: {
                 enabled: !0,
-                opacity: .4
+                opacity: .6
             },
             BoxInfo: {
                 enabled: !0
@@ -86,7 +86,7 @@
             },
             Tracers: {
                 Players: {
-                    enabled: !0
+                    enabled: !1
                 },
                 Wolf: {
                     enabled: !1
@@ -116,7 +116,7 @@
                     enabled: !1
                 },
                 Kraken: {
-                    enabled: !1
+                    enabled: !0
                 },
                 ArcticFox: {
                     enabled: !1
@@ -149,7 +149,7 @@
                     enabled: !1
                 },
                 Sandworm: {
-                    enabled: !1
+                    enabled: !0
                 },
                 Vulture: {
                     enabled: !1
@@ -199,12 +199,14 @@
         },
         Aimbot: {
             enabled: !1,
+            key: "KeyF",
             customDist: {
                 enabled: !1,
                 dist: 0
             },
             Animal_Aimbot: {
                 enabled: !1,
+            key: "KeyZ",
                 type: []
             }
         },
@@ -654,7 +656,7 @@
                 s = 10,
                 a = this.get_enabled_hacks();
             if (this.settings.Visuals.ListEnabledHacks && c && c.readyState == WebSocket.OPEN)
-                for (let o of a) this.user.alive && (this.ctx.save(), this.ctx.beginPath(), this.ctx.textAlign = "left", this.ctx.textBaseline = "middle", this.ctx.lineWidth = 6, this.ctx.fillStyle = "white", this.ctx.strokeStyle = "black", this.ctx.font = "18px Baloo Paaji", this.ctx.strokeText(o, s, t), this.ctx.fillText(o, s, t), this.ctx.restore(), t -= e)
+                for (let o of a) this.user.alive && (this.ctx.save(), this.ctx.beginPath(), this.ctx.textAlign = "left", this.ctx.textBaseline = "top", this.ctx.lineWidth = 6, this.ctx.fillStyle = "white", this.ctx.strokeStyle = "black", this.ctx.font = "18px Baloo Paaji", this.ctx.strokeText(o, s, t), this.ctx.fillText(o, s, t), this.ctx.restore(), t -= e)
         }
     };
     var P = class {
@@ -987,7 +989,7 @@
         })
     }
     var ce = {
-            title: "Meow Cult :3",
+            title: "Meow Cult >:3",
             align: "right",
             width: 500,
             theme: {
@@ -1260,6 +1262,18 @@
             property: "enabled",
             appendTo: "Misc"
         }, {
+            type: "checkbox",
+            label: "Aimbot",
+            object: h.Misc.Aimbot,
+            property: "enabled",
+            appendTo: "Misc"
+        }, {
+            type: "checkbox",
+            label: "Animal_Aimbot",
+            object: h.Misc.Animal_Aimbot,
+            property: "enabled",
+            appendTo: "Misc"
+        }, {
             type: "display",
             label: "Spectator Key: ",
             isKeyBind: !0,
@@ -1294,6 +1308,30 @@
             type: "button",
             label: "Set AutoCraft Key",
             action: () => T(h.Misc.AutoCraft),
+            appendTo: "Binds"
+        }, {
+            type: "display",
+            label: "Aimbot Key: ",
+            isKeyBind: !0,
+            object: h.Misc.Aimbot,
+            property: "key",
+            appendTo: "Binds"
+        }, {
+            type: "button",
+            label: "Set Aimbot Key",
+            action: () => T(h.Misc.Aimbot),
+            appendTo: "Binds"
+        }, {
+            type: "display",
+            label: "Animal_Aimbot Key: ",
+            isKeyBind: !0,
+            object: h.Misc.Animal_Aimbot,
+            property: "key",
+            appendTo: "Binds"
+        }, {
+            type: "button",
+            label: "Set Animal_Aimbot Key",
+            action: () => T(h.Misc.Animal_Aimbot),
             appendTo: "Binds"
         }, {
             type: "display",
